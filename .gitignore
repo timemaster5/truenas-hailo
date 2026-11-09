@@ -1,0 +1,5 @@
+hailo.conf
+hailo.log
+out/
+cache/
+.lock

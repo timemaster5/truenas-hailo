@@ -1,0 +1,15 @@
+# Copy to hailo.conf next to the scripts. Plain shell, sourced by the scripts.
+
+HAILO_DRIVER_VERSION=4.21.0
+# sha256 of https://github.com/hailo-ai/hailort-drivers/archive/refs/tags/v<VERSION>.tar.gz
+HAILO_DRIVER_SHA256=624468126c1e5609475389271b3d2878cb6e7e40df9e85bad95be464a3e11be3
+
+# Firmware is kernel independent and downloaded once. Leave the checksum empty to skip verification.
+HAILO_FW_URL=https://hailo-hailort.s3.eu-west-2.amazonaws.com/Hailo8/4.21.0/FW/hailo8_fw.4.21.0.bin
+HAILO_FW_SHA256=
+
+# TrueNAS apps to stop/start after the module was loaded by the POSTINIT run (space separated).
+APPS=""
+
+# Seconds to wait for the Docker daemon after boot.
+DOCKER_WAIT=600
