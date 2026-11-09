@@ -6,7 +6,7 @@ HAILO_DRIVER_SHA256=624468126c1e5609475389271b3d2878cb6e7e40df9e85bad95be464a3e1
 
 # Firmware is kernel independent and downloaded once. Leave the checksum empty to skip verification.
 HAILO_FW_URL=https://hailo-hailort.s3.eu-west-2.amazonaws.com/Hailo8/4.21.0/FW/hailo8_fw.4.21.0.bin
-HAILO_FW_SHA256=
+HAILO_FW_SHA256=2a5c94591d9e70d884242e64bf2388b0d2d46b816a335b4c00c3f81a07832635
 
 # TrueNAS apps to stop/start after the module was loaded by the POSTINIT run (space separated).
 APPS=""

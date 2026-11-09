@@ -31,7 +31,7 @@ use the PREINIT fast path only.
 
 Run on the TrueNAS host. Without `--apply` it only prints what it would do.
 
-    git clone <this repo> && cd truenas-hailo
+    git clone https://github.com/timemaster5/truenas-hailo && cd truenas-hailo
     ./install.sh --dest /mnt/tank/hailo        # dry run, prints commands
     ./install.sh --dest /mnt/tank/hailo --apply
 
