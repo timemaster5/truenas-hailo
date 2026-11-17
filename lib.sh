@@ -30,3 +30,21 @@ wait_for_device() {
   done
   return 1
 }
+
+load_conf() {
+  local conf=${HAILO_CONF:-$HAILO_HOME/hailo.conf}
+  [[ -f "$conf" ]] || conf=$HAILO_HOME/hailo.conf.example
+  # shellcheck source=hailo.conf.example
+  . "$conf"
+}
+
+# Driver version plus a hash of its patches; a changed id forces a rebuild.
+build_id() {
+  local h
+  h=$(cat "$HAILO_HOME/patches/$HAILO_DRIVER_VERSION"/*.patch 2>/dev/null | sha256sum | cut -c1-12)
+  printf '%s-%s' "$HAILO_DRIVER_VERSION" "$h"
+}
+
+build_current() {
+  [[ "$(cat "$OUT_DIR/$KVER/build-id" 2>/dev/null)" == "$(build_id)" ]]
+}

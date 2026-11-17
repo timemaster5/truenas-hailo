@@ -3,6 +3,7 @@
 #   /lib/modules, /usr/src, /boot   (kernel headers, config)
 #   /cache (rw)                     downloaded source and firmware
 #   /out   (rw)                     results
+#   /patches (ro)                   optional, <version>/*.patch applied to the driver source
 # Env: KVER HAILO_DRIVER_VERSION HAILO_DRIVER_SHA256 HAILO_FW_URL HAILO_FW_SHA256
 set -euo pipefail
 
@@ -41,6 +42,11 @@ if ! echo "${HAILO_DRIVER_SHA256}  ${src}" | sha256sum -c - >/dev/null 2>&1; the
   echo "${HAILO_DRIVER_SHA256}  ${src}" | sha256sum -c -
 fi
 tar -xzf "$src" -C /work
+for p in /patches/"${HAILO_DRIVER_VERSION}"/*.patch; do
+  [[ -f "$p" ]] || continue
+  echo "applying $(basename "$p")"
+  patch -p1 -d "/work/hailort-drivers-${HAILO_DRIVER_VERSION}" <"$p"
+done
 make -C "/work/hailort-drivers-${HAILO_DRIVER_VERSION}/linux/pcie" all \
   kernelver="${KVER}" KERNEL_DIR=/work/kbuild
 
@@ -56,4 +62,5 @@ if [[ -n "${HAILO_FW_URL:-}" && ! -s "$fw" ]]; then
   fi
   mv "${fw}.part" "$fw"
 fi
+echo "${HAILO_BUILD_ID:-}" >"/out/${KVER}/build-id"
 echo "built ${KVER}"

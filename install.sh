@@ -44,9 +44,10 @@ if [[ "$existing" != "[]" ]]; then
   exit 1
 fi
 
-run mkdir -p "$DEST/build"
+run mkdir -p "$DEST/build" "$DEST/patches"
 run cp "$SRC/hailo-ensure.sh" "$SRC/hailo-preinit.sh" "$SRC/lib.sh" "$DEST/"
 run cp "$SRC/build/Dockerfile" "$SRC/build/build.sh" "$DEST/build/"
+run cp -R "$SRC/patches/." "$DEST/patches/"
 if [[ ! -f "$DEST/hailo.conf" ]]; then
   run cp "$SRC/hailo.conf.example" "$DEST/hailo.conf"
 fi

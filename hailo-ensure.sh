@@ -14,10 +14,7 @@ if [[ "${1:-}" == "--detach" ]]; then
   exit 0
 fi
 
-CONF=${HAILO_CONF:-$HAILO_HOME/hailo.conf}
-[[ -f "$CONF" ]] || CONF=$HAILO_HOME/hailo.conf.example
-# shellcheck source=hailo.conf.example
-. "$CONF"
+load_conf
 : "${DOCKER_WAIT:=600}" "${APPS:=}"
 
 exec 9>"$HAILO_HOME/.lock"
@@ -34,7 +31,7 @@ if module_loaded; then
   rmmod hailo_pci || die "rmmod failed"
 fi
 
-if ! ko_matches_kernel; then
+if ! ko_matches_kernel || ! build_current; then
   log "no module for $KVER, building"
   for ((i = 0; i < DOCKER_WAIT; i += 5)); do
     docker info >/dev/null 2>&1 && break
@@ -51,16 +48,18 @@ if ! ko_matches_kernel; then
     -e KVER="$KVER" \
     -e HAILO_DRIVER_VERSION="$HAILO_DRIVER_VERSION" \
     -e HAILO_DRIVER_SHA256="$HAILO_DRIVER_SHA256" \
+    -e HAILO_BUILD_ID="$(build_id)" \
     -e HAILO_FW_URL="${HAILO_FW_URL:-}" \
     -e HAILO_FW_SHA256="${HAILO_FW_SHA256:-}" \
     -v /lib/modules:/lib/modules:ro \
     -v /usr/src:/usr/src:ro \
     -v /boot:/boot:ro \
     -v "$HAILO_HOME/build/build.sh":/build.sh:ro \
+    -v "$HAILO_HOME/patches":/patches:ro \
     -v "$HAILO_HOME/cache":/cache \
     -v "$OUT_DIR":/out \
     "$image" >>"$HAILO_HOME/hailo.log" 2>&1 || die "build failed, see $HAILO_HOME/hailo.log"
-  ko_matches_kernel || die "built module does not match $KVER"
+  ko_matches_kernel && build_current || die "built module does not match $KVER"
 fi
 
 set_fw_path || die "firmware missing in $FW_DIR"

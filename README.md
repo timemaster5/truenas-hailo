@@ -13,7 +13,8 @@ module for the running kernel and loads it, without writing to the root filesyst
   `/boot` are mounted read-only; the only writable paths are the project directory's `out/`
   and `cache/`. Nothing is installed on the TrueNAS root filesystem.
 - The driver source is fetched from `hailo-ai/hailort-drivers` by tag and verified against a
-  pinned sha256.
+  pinned sha256. Patches in `patches/<driver version>/*.patch` are applied to that source; the
+  module records the version and patch set in `out/<kernel>/build-id`, and a changed set rebuilds.
 - Modules are kept per kernel (`out/<kernel>/hailo_pci.ko`), so booting an older boot
   environment finds its module again without a rebuild.
 - Two init tasks, registered through TrueNAS Init/Shutdown Scripts:
