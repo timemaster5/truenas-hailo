@@ -69,6 +69,6 @@ log "loaded $KO"
 
 for app in $APPS; do
   log "restarting app $app"
-  midclt call -job app.stop "$app" >/dev/null 2>&1 || log "app.stop $app failed"
-  midclt call -job app.start "$app" >/dev/null 2>&1 || log "app.start $app failed"
+  midclt call --job app.stop "$app" >/dev/null 2>&1 || log "app.stop $app failed"
+  midclt call --job app.start "$app" >/dev/null 2>&1 || log "app.start $app failed"
 done
